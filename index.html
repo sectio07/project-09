@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>project-09</title>
   <style>
     :root{
@@ -12,57 +12,14 @@
       --bezel:#222;
       --shadow:0 8px 30px rgba(0,0,0,0.6);
     }
-    body{
-      font-family:monospace;
-      margin:20px;
-      background:#000;
-      color:#fff;
-      text-align:center;
-    }
+    body{font-family:monospace;margin:30px;background:#000;color:#fff;text-align:center}
 
-    .lcd{
-      display:inline-block;
-      width:90%;
-      max-width:520px;
-      padding:4%;
-      border-radius:12px;
-      background:linear-gradient(180deg,var(--bezel),#333);
-      box-shadow:var(--shadow);
-    }
-    .screen{
-      border-radius:8px;
-      background:linear-gradient(180deg,rgba(10,43,18,0.92),rgba(5,30,12,0.95));
-      padding:18px 12px;
-      border:4px solid rgba(0,0,0,0.25);
-    }
+    .lcd{display:inline-block;max-width:90vw;width:520px;padding:20px;border-radius:12px;background:linear-gradient(180deg,var(--bezel),#333);box-shadow:var(--shadow);}
+    .screen{border-radius:8px;background:linear-gradient(180deg,rgba(10,43,18,0.92),rgba(5,30,12,0.95));padding:18px 12px;border:4px solid rgba(0,0,0,0.25);}
 
-    .row{
-      display:flex;
-      gap:4px;
-      margin-bottom:6px;
-      justify-content:center;
-    }
-    .cell{
-      flex:1;
-      max-width:24px;
-      aspect-ratio:2/3;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      color:var(--lcd-char);
-      font-size:1.2em;
-    }
+    .row{display:flex;gap:4px;margin-bottom:6px;justify-content:center}
+    .cell{width:24px;height:38px;display:flex;align-items:center;justify-content:center;color:var(--lcd-char);font-size:18px;}
     .cell.off{color:#254b2f;}
-
-    @media (max-width:600px){
-      .cell{
-        font-size:0.9em;
-        max-width:16px;
-      }
-      .lcd{
-        padding:3%;
-      }
-    }
   </style>
 </head>
 <body>
@@ -73,13 +30,16 @@
     </div>
   </div>
 
+  <!-- Audio autoplay -->
+  <audio id="bgAudio" src="Hindia - everything u are [lB8ASupNtlw].mp3" autoplay loop></audio>
+
   <script>
     const CONFIG = {
       cols: 16,
       rows: 2,
-      mainText: " halooo marsaaa ", // teks utama yang berjalan
-      blinkLine1: "tetap",
-      blinkLine2: "semangat !!"
+      mainText: " halooo marsaaa ", // teks utama
+      blinkLine1: "semangat",
+      blinkLine2: "kuliahnya"
     };
 
     const state = {cols:CONFIG.cols, rows:CONFIG.rows, grid:[], interval:null};
@@ -107,7 +67,7 @@
       cell.char=ch; cell.el.textContent=ch; cell.el.classList.remove('off');
     }
 
-    function clear(){
+    function clearLCD(){
       for(let r=0;r<state.rows;r++) for(let c=0;c<state.cols;c++){
         const cell=state.grid[r][c]; cell.char=' '; cell.el.textContent=' '; cell.el.classList.add('off');
       }
@@ -120,31 +80,33 @@
       }
     }
 
+    // Blink pesan semangat/kuliahnya
     function blinkMessage(callback){
       let count=0;
       let visible=true;
       const blinkInterval=setInterval(()=>{
-        clear();
+        clearLCD();
         if(visible){
           setText(0,0,CONFIG.blinkLine1);
           setText(1,0,CONFIG.blinkLine2);
         }
         visible=!visible;
         count++;
-        if(count>=6){
+        if(count>=10){ // 5 kali kedip (on+off)
           clearInterval(blinkInterval);
           if(callback) callback();
         }
       },500);
     }
 
+    // Scroll teks utama
     function startScroll(){
       const row=0;
       const text=CONFIG.mainText;
       let pos=state.cols;
       if(state.interval){clearInterval(state.interval);}
       state.interval=setInterval(()=>{
-        clear();
+        clearLCD();
         const start=Math.max(0,-pos);
         const end=Math.min(text.length,state.cols-pos+text.length);
         for(let i=start;i<end;i++){
@@ -161,8 +123,17 @@
       },300);
     }
 
+    // Inisialisasi grid
     makeGrid(state.cols,state.rows);
     startScroll();
+
+    // Coba jalankan audio saat load
+    window.addEventListener("load", () => {
+      const audio=document.getElementById("bgAudio");
+      audio.play().catch(err=>{
+        console.warn("Autoplay mungkin diblokir browser:",err);
+      });
+    });
   </script>
 </body>
 </html>
