@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>LCD Display Arduino - Web Demo</title>
   <style>
     :root{
@@ -12,18 +12,61 @@
       --bezel:#222;
       --shadow:0 8px 30px rgba(0,0,0,0.6);
     }
-    body{font-family:monospace;margin:30px;background:#f3f6f8;color:#111;text-align:center}
+    body{
+      font-family:monospace;
+      margin:20px;
+      background:#000;
+      color:#fff;
+      text-align:center;
+    }
 
-    .lcd{display:inline-block;width:520px;padding:20px;border-radius:12px;background:linear-gradient(180deg,var(--bezel),#333);box-shadow:var(--shadow);}
-    .screen{border-radius:8px;background:linear-gradient(180deg,rgba(10,43,18,0.92),rgba(5,30,12,0.95));padding:18px 12px;border:4px solid rgba(0,0,0,0.25);}
+    .lcd{
+      display:inline-block;
+      width:90%;
+      max-width:520px;
+      padding:4%;
+      border-radius:12px;
+      background:linear-gradient(180deg,var(--bezel),#333);
+      box-shadow:var(--shadow);
+    }
+    .screen{
+      border-radius:8px;
+      background:linear-gradient(180deg,rgba(10,43,18,0.92),rgba(5,30,12,0.95));
+      padding:18px 12px;
+      border:4px solid rgba(0,0,0,0.25);
+    }
 
-    .row{display:flex;gap:4px;margin-bottom:6px;justify-content:center}
-    .cell{width:24px;height:38px;display:flex;align-items:center;justify-content:center;color:var(--lcd-char);font-size:18px;}
+    .row{
+      display:flex;
+      gap:4px;
+      margin-bottom:6px;
+      justify-content:center;
+    }
+    .cell{
+      flex:1;
+      max-width:24px;
+      aspect-ratio:2/3;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:var(--lcd-char);
+      font-size:1.2em;
+    }
     .cell.off{color:#254b2f;}
+
+    @media (max-width:600px){
+      .cell{
+        font-size:0.9em;
+        max-width:16px;
+      }
+      .lcd{
+        padding:3%;
+      }
+    }
   </style>
 </head>
 <body>
-  <h2>Kata-kata hari ini</h2>
+  <h2>Kata Kata Hari Ini</h2>
   <div class="lcd">
     <div class="screen">
       <div id="lcdGrid"></div>
@@ -35,8 +78,8 @@
       cols: 16,
       rows: 2,
       mainText: " halooo marsaaa ", // teks utama yang berjalan
-      blinkLine1: "tetap",
-      blinkLine2: "semangat !!"
+      blinkLine1: "semangat",
+      blinkLine2: "kuliahnya"
     };
 
     const state = {cols:CONFIG.cols, rows:CONFIG.rows, grid:[], interval:null};
@@ -77,8 +120,6 @@
       }
     }
 
-    // Tampilkan teks blink (tetap
-    // /semangat !!) 5 kali
     function blinkMessage(callback){
       let count=0;
       let visible=true;
@@ -90,14 +131,13 @@
         }
         visible=!visible;
         count++;
-        if(count>=10){ // 5 kali kedip (on+off = 2)
+        if(count>=6){
           clearInterval(blinkInterval);
           if(callback) callback();
         }
       },500);
     }
 
-    // Animasi teks berjalan dari kanan ke kiri terus menerus
     function startScroll(){
       const row=0;
       const text=CONFIG.mainText;
@@ -121,7 +161,6 @@
       },300);
     }
 
-    // Inisialisasi grid
     makeGrid(state.cols,state.rows);
     startScroll();
   </script>
