@@ -20,6 +20,12 @@
     .row{display:flex;gap:4px;margin-bottom:6px;justify-content:center}
     .cell{width:24px;height:38px;display:flex;align-items:center;justify-content:center;color:var(--lcd-char);font-size:18px;}
     .cell.off{color:#254b2f;}
+
+    /* Tombol musik */
+    .controls{margin-top:20px;}
+    button{padding:8px 16px;margin:0 5px;font-size:14px;border:none;border-radius:6px;cursor:pointer;}
+    .play{background:#2ecc71;color:#fff;}
+    .pause{background:#e74c3c;color:#fff;}
   </style>
 </head>
 <body>
@@ -30,14 +36,20 @@
     </div>
   </div>
 
-  <!-- Audio autoplay -->
-  <audio id="bgAudio" src="Hindia - everything u are [lB8ASupNtlw].mp3" autoplay loop></audio>
+  <!-- Kontrol Musik -->
+  <div class="controls">
+    <button class="play" onclick="playAudio()">▶ Play</button>
+    <button class="pause" onclick="pauseAudio()">⏸ Pause</button>
+  </div>
+
+  <!-- Audio dengan relative path -->
+  <audio id="bgAudio" src="music/Hindia-everything-u-are.mp3" loop></audio>
 
   <script>
     const CONFIG = {
       cols: 16,
       rows: 2,
-      mainText: " halooo marsaaa ", // teks utama
+      mainText: " halooo marsaaa ",
       blinkLine1: "tetap",
       blinkLine2: "semangat !!"
     };
@@ -80,7 +92,6 @@
       }
     }
 
-    // Blink pesan semangat/kuliahnya
     function blinkMessage(callback){
       let count=0;
       let visible=true;
@@ -92,14 +103,13 @@
         }
         visible=!visible;
         count++;
-        if(count>=10){ // 5 kali kedip (on+off)
+        if(count>=10){ // 5 kali kedip
           clearInterval(blinkInterval);
           if(callback) callback();
         }
       },500);
     }
 
-    // Scroll teks utama
     function startScroll(){
       const row=0;
       const text=CONFIG.mainText;
@@ -123,17 +133,13 @@
       },300);
     }
 
-    // Inisialisasi grid
     makeGrid(state.cols,state.rows);
     startScroll();
 
-    // Coba jalankan audio saat load
-    window.addEventListener("load", () => {
-      const audio=document.getElementById("bgAudio");
-      audio.play().catch(err=>{
-        console.warn("Autoplay mungkin diblokir browser:",err);
-      });
-    });
+    // Kontrol audio
+    const audio=document.getElementById("bgAudio");
+    function playAudio(){ audio.play(); }
+    function pauseAudio(){ audio.pause(); }
   </script>
 </body>
 </html>
